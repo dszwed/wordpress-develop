@@ -1660,9 +1660,18 @@ class WP_List_Table {
 	protected function get_table_classes() {
 		$mode = get_user_setting( 'posts_list_mode', 'list' );
 
-		$mode_class = esc_attr( 'table-view-' . $mode );
+		$mode_class      = esc_attr( 'table-view-' . $mode );
+		$default_classes = array( 'widefat', 'fixed', 'striped', $mode_class, $this->_args['plural'] );
 
-		return array( 'widefat', 'fixed', 'striped', $mode_class, $this->_args['plural'] );
+		/**
+		 * Filters the list table CSS classes.
+		 *
+		 * @param string[] $default_classes Array of CSS classes for the table tag.
+		 * @param WP_List_Table $this Current instance of WP_List_Table.
+		 */
+		$classes = apply_filters( 'post_list_table_classes', $default_classes, $this );
+
+		return is_array( $classes ) ? array_map( 'sanitize_html_class', $classes ) : array();
 	}
 
 	/**
